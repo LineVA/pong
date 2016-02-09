@@ -3,7 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package pong;
+package doyenm.pong;
+
+import doyenm.gui.PlayGui;
 
 /**
  *
@@ -15,7 +17,7 @@ public class Pong {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-      
+        PlayGui play = new PlayGui();
     }
     
 }
