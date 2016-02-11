@@ -12,15 +12,18 @@ import java.awt.event.WindowListener;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.Color;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import javax.swing.JLayeredPane;
 
 /**
  *
  * @author doyenm
  */
-public class Animation extends JFrame{
-    public Animation(){
-            super("Animation");
+public class Animation extends JFrame {
+
+    public Animation() {
+        super("Animation");
         WindowListener l = new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -29,51 +32,83 @@ public class Animation extends JFrame{
         };
         addWindowListener(l);
         int size;
-      
-        Canvas canvas = new Canvas(100, 100);
-         JLayeredPane layeredPane = new JLayeredPane();
+
+        Canvas canvas = new Canvas(0, 0, Color.GREEN);
+        JLayeredPane layeredPane = new JLayeredPane();
         canvas.setBounds(0, 0, 500, 500);
         layeredPane.add(canvas);
-        
-         setContentPane(layeredPane);
+        addKeyListener(new KeyboardListener(canvas));
+
+        setContentPane(layeredPane);
         setSize(500, 585);
         setVisible(true);
-        go(canvas);
+//        go(canvas);
     }
-    
-    private void go(Canvas pan){
-    for(int i = -50; i < pan.getWidth(); i++){
-      int x = pan.x, y = pan.y;
-      x++;
-      y++;
-      pan.x = x;
-      pan.y = y;
-      pan.repaint();  
-      try {
-        Thread.sleep(300);
-      } catch (InterruptedException e) {
-        e.printStackTrace();
-      }
-    }
-  }       
+
 }
 
-class Canvas extends JPanel{
-    
+class KeyboardListener implements KeyListener {
+
+    Canvas pane;
+
+    public KeyboardListener(Canvas pane) {
+        this.pane = pane;
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+        System.out.println("keyTyped");
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        System.out.println("keyPressed");
+        System.out.println(e.getKeyChar());
+        pane.go();
+        //  throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        System.out.println("keyReleased");
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+}
+
+class Canvas extends JPanel {
+
     public int x;
     public int y;
-    
-    public Canvas(int x, int y){
+    public Color color;
+
+    public Canvas(int x, int y, Color color) {
         this.x = x;
         this.y = y;
+        this.color = color;
     }
-    
-     @Override
+
+    public void go() {
+        //for(int i = -50; i < pan.getWidth(); i++){
+        x = x + 50;
+        y = y + 50;
+        x = x;
+        y = y;
+        repaint();
+//        try {
+//            Thread.sleep(300);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+        //}
+    }
+
+    @Override
     public void paint(Graphics g) {
         super.paint(g);
-        g.setColor(Color.GREEN);
+        g.setColor(color);
         g.fillOval(x, y, 50, 50);
     }
-    
-    
+
 }
