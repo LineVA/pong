@@ -8,7 +8,6 @@ package doyenm.gui;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 import javax.swing.JPanel;
 
 /**
@@ -19,22 +18,31 @@ public class Canvas extends JPanel {
 
     private int xBall;
     private int yBall;
+    private final int radius = 25;
 
-    private int xLeftRacket;
+    private final int widthRect = 40;
+    private final int heightRect = 100;
+    private final int roundRect = 15;
+
+    private final int xLeftRacket;
     private int yLeftRacket;
-
-    private int xRightRacket;
+    private final int xRightRacket;
     private int yRightRacket;
 
-    private Random random;
+    private final int width = 500;
+    private final int height = 500;
+
+    private final int keySensibility = 10;
+
+    private final Random random;
 
     public Canvas(int x, int y) {
-        this.xBall = 225;
-        this.yBall = 225;
+        this.xBall = this.width / 2 - radius / 2;
+        this.yBall = this.height / 2 - radius / 2;
         this.xLeftRacket = 0;
-        this.yLeftRacket = 200;
-        this.xRightRacket = 460;
-        this.yRightRacket = 200;
+        this.yLeftRacket = this.height / 2 - this.heightRect / 2;
+        this.xRightRacket = this.width - this.widthRect;
+        this.yRightRacket = this.height / 2 - this.heightRect / 2;
         this.random = new Random();
     }
 
@@ -47,21 +55,31 @@ public class Canvas extends JPanel {
         }
     }
 
+    public boolean checkHitBox(int majX, int majY) {
+        return ((this.xBall + this.radius + majX >= this.xRightRacket)
+                && (this.yBall >= this.yRightRacket)
+                && (this.yBall <= (this.yRightRacket + this.heightRect)));
+    }
+
     public void initMove() {
         int majX = selectDirection();
         int majY = selectDirection();
         this.xBall += majX;
         this.yBall += majY;
         repaint();
-//        try {
-//            Thread.sleep(40);
-//        } catch (InterruptedException e) {
-//        }
         long start = System.nanoTime();
         while ((System.nanoTime() - start) < 50000000) {
         }
         this.continueMove(majX, majY);
     }
+    
+//    public void initMove() {
+//        repaint();
+//        long start = System.nanoTime();
+//        while ((System.nanoTime() - start) < 10000000) {
+//        }
+//        this.continueMove(5, 2);
+//    }
 
 //    public void continueMove(int majX, int majY) {
 //        while (true) {
@@ -77,32 +95,41 @@ public class Canvas extends JPanel {
 //    }
     public void continueMove(int majX, int majY) {
         while (true) {
-            this.xBall += majX;
-            this.yBall += majY;
-            repaint();
-            long start = System.nanoTime();
-            while ((System.nanoTime() - start) < 50000000) {
+            // If we can make an elementary move without hit a racket
+            if (!checkHitBox(majX, majY)) {
+                this.xBall += majX;
+                this.yBall += majY;
+                repaint();
+                // if (!checkHitBox()) {
+                long start = System.nanoTime();
+                while ((System.nanoTime() - start) < 50000000) {
+                }
+                // We only do the move we can to touch the racket
+            } else {
+                this.xBall += (this.xRightRacket - this.xBall - this.radius);
+                repaint();
+                break;
             }
         }
     }
 
     public void upLeft() {
-        this.yLeftRacket -= 10;
+        this.yLeftRacket -= this.keySensibility;
         repaint();
     }
 
     public void downLeft() {
-        this.yLeftRacket += 10;
+        this.yLeftRacket += this.keySensibility;
         repaint();
     }
 
     public void upRight() {
-        this.yRightRacket -= 10;
+        this.yRightRacket -= this.keySensibility;
         repaint();
     }
 
     public void downRight() {
-        this.yRightRacket += 10;
+        this.yRightRacket += this.keySensibility;
         repaint();
     }
 
@@ -110,17 +137,12 @@ public class Canvas extends JPanel {
     public void paint(Graphics g) {
         super.paint(g);
         g.setColor(Color.GREEN);
-        g.fillOval(xBall, yBall, 50, 50);
+        g.fillOval(xBall, yBall, this.radius, this.radius);
         g.setColor(Color.ORANGE);
-        g.fillRoundRect(this.xLeftRacket, this.yLeftRacket, 40, 100, 15, 15);
+        g.fillRoundRect(this.xLeftRacket, this.yLeftRacket, this.widthRect,
+                this.heightRect, this.roundRect, this.roundRect);
         g.setColor(Color.YELLOW);
-        g.fillRoundRect(this.xRightRacket, this.yRightRacket, 40, 100, 15, 15);
-    }
-}
-
-class Ball {
-
-    public Ball() {
-
+        g.fillRoundRect(this.xRightRacket, this.yRightRacket, this.widthRect,
+                this.heightRect, this.roundRect, this.roundRect);
     }
 }
