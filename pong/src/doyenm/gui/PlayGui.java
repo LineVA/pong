@@ -5,6 +5,7 @@
  */
 package doyenm.gui;
 
+import java.awt.Component;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -34,7 +35,7 @@ public class PlayGui extends JFrame {
         addKeyListener(new KeyboardMoveListener(canvas));
         
         setContentPane(layeredPane);
-        setSize(500, 500);
+        setSize(500, 600);
         setVisible(true);
         canvas.initMove();
 
