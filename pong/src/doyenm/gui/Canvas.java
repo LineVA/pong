@@ -68,6 +68,14 @@ public class Canvas extends JPanel {
                 && (this.yBall + majY <= (this.yLeftRacket + this.heightRect)));
     }
 
+    public boolean checkLoseRight() {
+        return this.xBall >= this.width;
+    }
+
+    public boolean checkLoseLeft() {
+        return this.xBall <= 0;
+    }
+
     public boolean checkHitBoxUp(int majX, int majY) {
         return this.yBall + majY <= 0;
     }
@@ -92,7 +100,7 @@ public class Canvas extends JPanel {
         long start = System.nanoTime();
         while ((System.nanoTime() - start) < 10000000) {
         }
-        this.continueMove(0, 1);
+        this.continueMove(1, 2);
     }
 
 //    public void continueMove(int majX, int majY) {
@@ -113,34 +121,52 @@ public class Canvas extends JPanel {
         boolean checkDown;
         boolean checkUp;
         while (true) {
-            checkRight = checkHitBoxRight(majX, majY);
-            checkLeft = checkHitBoxLeft(majX, majY);
-            checkDown = checkHitBoxDown(majX, majY);
-            checkUp = checkHitBoxUp(majX, majY);
-            // If we can make an elementary move without hit a racket
-            if (!checkRight && !checkLeft && !checkUp && !checkDown) {
-                this.xBall += majX;
-                this.yBall += majY;
-                repaint();
-                long start = System.nanoTime();
-                while ((System.nanoTime() - start) < 10000000) {
+            // We check if we are inside the screen, i.e. if we do not loose.
+            if (!checkLoseRight() && !checkLoseLeft()) {
+                checkRight = checkHitBoxRight(majX, majY);
+                checkLeft = checkHitBoxLeft(majX, majY);
+                checkDown = checkHitBoxDown(majX, majY);
+                checkUp = checkHitBoxUp(majX, majY);
+                // If we have a collision 
+                if (!checkRight && !checkLeft && !checkUp && !checkDown) {
+                    System.out.println("1");
+                    this.xBall += majX;
+                    this.yBall += majY;
+                    repaint();
+                    long start = System.nanoTime();
+                    while ((System.nanoTime() - start) < 10000000) {
+                    }
+                    
+                    System.out.println("after the while");
+                    // We only do the move we can to touch the right racket
+                } else if (checkRight) {
+                    this.xBall += (this.xRightRacket - this.xBall - this.radius);
+                    repaint();
+                    continueMove(-majX, majY);
+                    // We only do the move we can to touch the left racket
+                } else if (checkLeft) {
+                    this.xBall -= (this.xBall - this.xLeftRacket - this.widthRect);
+                    repaint();
+                    continueMove(-majX, majY);
+                    // We only do the move we can to touch the up 
+                    // side of the screen
+                } else if (checkUp) {
+                    this.yBall = 0;
+                    repaint();
+                    continueMove(majX, -majY);
+                    // We only do the move we can to touch the down 
+                    // side of the screen
+                } else if (checkDown) {
+                    this.yBall = this.height - this.radius;
+                    repaint();
+                    continueMove(majX, -majY);
+                } else {
+                    System.out.println("Else");
                 }
-                // We only do the move we can to touch the right racket
-            } else if (checkRight) {
-                this.xBall += (this.xRightRacket - this.xBall - this.radius);
-                repaint();
-                break;
-            } else if (checkLeft) {
-                this.xBall -= (this.xBall - this.xLeftRacket - this.widthRect);
-                repaint();
-                break;
-            } else if (checkUp) {
-                this.yBall = 0;
-                repaint();
-                break;
-            } else if (checkDown) {
-                this.yBall = this.height - this.radius;
-                System.out.println(this.yBall);
+            } else {
+                System.out.println("Loose");
+                this.xBall = -200;
+                this.yBall = -200;
                 repaint();
                 break;
             }
@@ -148,22 +174,40 @@ public class Canvas extends JPanel {
     }
 
     public void upLeft() {
-        this.yLeftRacket -= this.keySensibility;
+        if (this.yLeftRacket < this.keySensibility) {
+            this.yLeftRacket = 0;
+        } else {
+            this.yLeftRacket -= this.keySensibility;
+        }
         repaint();
     }
 
     public void downLeft() {
-        this.yLeftRacket += this.keySensibility;
+        if (this.yLeftRacket + this.heightRect
+                > this.height - this.keySensibility) {
+            this.yLeftRacket = this.height - this.heightRect;
+        } else {
+            this.yLeftRacket += this.keySensibility;
+        }
         repaint();
     }
 
     public void upRight() {
-        this.yRightRacket -= this.keySensibility;
+        if (this.yRightRacket < this.keySensibility) {
+            this.yRightRacket = 0;
+        } else {
+            this.yRightRacket -= this.keySensibility;
+        }
         repaint();
     }
 
     public void downRight() {
-        this.yRightRacket += this.keySensibility;
+        if (this.yRightRacket + this.heightRect
+                > this.height - this.keySensibility) {
+            this.yRightRacket = this.height - this.heightRect;
+        } else {
+            this.yRightRacket += this.keySensibility;
+        }
         repaint();
     }
 
