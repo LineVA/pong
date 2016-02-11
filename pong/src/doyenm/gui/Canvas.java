@@ -46,6 +46,7 @@ public class Canvas extends JPanel {
         this.random = new Random();
     }
 
+    // We randomly select an initial direction for the ball
     public int selectDirection() {
         float sign = random.nextFloat();
         if (sign < 0.5) {
@@ -55,10 +56,16 @@ public class Canvas extends JPanel {
         }
     }
 
-    public boolean checkHitBox(int majX, int majY) {
+    public boolean checkHitBoxRight(int majX, int majY) {
         return ((this.xBall + this.radius + majX >= this.xRightRacket)
                 && (this.yBall >= this.yRightRacket)
                 && (this.yBall <= (this.yRightRacket + this.heightRect)));
+    }
+
+    public boolean checkHitBoxLeft(int majX, int majY) {
+        return ((this.xBall + majX <= (this.xLeftRacket + this.widthRect ))
+                && (this.yBall >= this.yLeftRacket)
+                && (this.yBall <= (this.yLeftRacket + this.heightRect)));
     }
 
     public void initMove() {
@@ -78,7 +85,7 @@ public class Canvas extends JPanel {
 //        long start = System.nanoTime();
 //        while ((System.nanoTime() - start) < 10000000) {
 //        }
-//        this.continueMove(5, 2);
+//        this.continueMove(-5, 0);
 //    }
 
 //    public void continueMove(int majX, int majY) {
@@ -95,18 +102,24 @@ public class Canvas extends JPanel {
 //    }
     public void continueMove(int majX, int majY) {
         while (true) {
+            boolean checkRight = checkHitBoxRight(majX, majY);
+            boolean checkLeft = checkHitBoxLeft(majX, majY);
             // If we can make an elementary move without hit a racket
-            if (!checkHitBox(majX, majY)) {
+            if (!checkRight && !checkLeft) {
                 this.xBall += majX;
                 this.yBall += majY;
                 repaint();
                 // if (!checkHitBox()) {
                 long start = System.nanoTime();
-                while ((System.nanoTime() - start) < 50000000) {
+                while ((System.nanoTime() - start) < 30000000) {
                 }
-                // We only do the move we can to touch the racket
-            } else {
+                // We only do the move we can to touch the right racket
+            } else if (checkRight) {
                 this.xBall += (this.xRightRacket - this.xBall - this.radius);
+                repaint();
+                break;
+            } else {
+                this.xBall -= (this.xBall - this.xLeftRacket - this.widthRect);
                 repaint();
                 break;
             }
