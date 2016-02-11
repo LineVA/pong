@@ -5,10 +5,38 @@
  */
 package doyenm.gui;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import javax.swing.JFrame;
+import javax.swing.JLayeredPane;
+
 /**
  *
  * @author doyenm
  */
-public class PlayGui {
+public class PlayGui extends JFrame {
+
+    public PlayGui() {
+        super("Pong");
+        WindowListener l = new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                System.exit(0);
+            }
+        };
+        addWindowListener(l);
+
+        Canvas canvas = new Canvas(100, 100);
+        JLayeredPane layeredPane = new JLayeredPane();
+        canvas.setBounds(0, 0, 500, 500);
+        layeredPane.add(canvas);
+        addKeyListener(new KeyboardMoveListener(canvas));
+
+        setContentPane(layeredPane);
+        setSize(500, 500);
+        setVisible(true);
+    }
+
     
 }
