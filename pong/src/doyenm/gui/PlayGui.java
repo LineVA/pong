@@ -32,10 +32,12 @@ public class PlayGui extends JFrame {
         canvas.setBounds(0, 0, 500, 500);
         layeredPane.add(canvas);
         addKeyListener(new KeyboardMoveListener(canvas));
-
+        
         setContentPane(layeredPane);
         setSize(500, 500);
         setVisible(true);
+        canvas.initMove();
+
     }
 
     

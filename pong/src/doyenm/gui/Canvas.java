@@ -7,6 +7,8 @@ package doyenm.gui;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
 import javax.swing.JPanel;
 
 /**
@@ -24,6 +26,8 @@ public class Canvas extends JPanel {
     private int xRightRacket;
     private int yRightRacket;
 
+    private Random random;
+
     public Canvas(int x, int y) {
         this.xBall = 225;
         this.yBall = 225;
@@ -31,18 +35,54 @@ public class Canvas extends JPanel {
         this.yLeftRacket = 200;
         this.xRightRacket = 460;
         this.yRightRacket = 200;
+        this.random = new Random();
     }
 
-    public void move() {
-        while (true) {
-            this.xBall++;
-            this.yBall++;
-            repaint();
+    public int selectDirection() {
+        float sign = random.nextFloat();
+        if (sign < 0.5) {
+            return -random.nextInt(10);
+        } else {
+            return random.nextInt(10);
+        }
+    }
+
+    public void initMove() {
+        int majX = selectDirection();
+        int majY = selectDirection();
+        this.xBall += majX;
+        this.yBall += majY;
+        repaint();
+//        try {
+//            Thread.sleep(40);
+//        } catch (InterruptedException e) {
+//        }
+        long start = System.nanoTime();
+        while ((System.nanoTime() - start) < 50000000) {
+        }
+        this.continueMove(majX, majY);
+    }
+
+//    public void continueMove(int majX, int majY) {
+//        while (true) {
+//            this.xBall += majX;
+//            this.yBall += majY;
+//            repaint();
 //            try {
-//                Thread.sleep(100);
+//                Thread.sleep(40);
 //            } catch (InterruptedException e) {
 //                e.printStackTrace();
 //            }
+//        }
+//    }
+    public void continueMove(int majX, int majY) {
+        while (true) {
+            this.xBall += majX;
+            this.yBall += majY;
+            repaint();
+            long start = System.nanoTime();
+            while ((System.nanoTime() - start) < 50000000) {
+            }
         }
     }
 
