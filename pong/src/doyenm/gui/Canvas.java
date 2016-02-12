@@ -16,28 +16,37 @@ import javax.swing.JPanel;
  */
 public class Canvas extends JPanel {
 
+    // To draw and position the ball
     private int xBall;
     private int yBall;
     private final int radius = 25;
 
+    // To draw the rackets
     private final int widthRect = 40;
     private final int heightRect = 100;
     private final int roundRect = 15;
 
+    // To position the rackets
     private final int xLeftRacket;
     private int yLeftRacket;
     private final int xRightRacket;
     private int yRightRacket;
 
+    // To display the scores
     private final String playerLeft = "Player 1 : ";
     private int scoreLeft;
     private final String playerRight = "Player 2 : ";
     private int scoreRight;
 
+    // For the window
     private final int width = 500;
     private final int height = 500;
 
+    // Key sensibility to move the rackets
     private final int keySensibility = 10;
+
+    // Number of nanosecondes between two moves of the ball
+    private int ballDelay;
 
     private final Random random;
 
@@ -51,6 +60,7 @@ public class Canvas extends JPanel {
         this.scoreLeft = 0;
         this.scoreRight = 0;
         this.random = new Random();
+        this.ballDelay = 20000000;
     }
 
     // We randomly select an initial direction for the ball
@@ -100,7 +110,7 @@ public class Canvas extends JPanel {
         this.yBall += majY;
         repaint();
         long start = System.nanoTime();
-        while ((System.nanoTime() - start) < 50000000) {
+        while ((System.nanoTime() - start) < this.ballDelay) {
         }
         this.continueMove(majX, majY);
     }
@@ -124,6 +134,14 @@ public class Canvas extends JPanel {
 //            }
 //        }
 //    }
+
+    public void changeSpeed(){
+        if((this.scoreLeft + this.scoreRight)%5 == 0){
+            this.ballDelay = this.ballDelay/2;
+        }
+    }
+    
+    
     public void continueMove(int majX, int majY) {
         boolean checkRight;
         boolean checkLeft;
@@ -142,28 +160,30 @@ public class Canvas extends JPanel {
                     this.yBall += majY;
                     repaint();
                     long start = System.nanoTime();
-                    while ((System.nanoTime() - start) < 10000000) {
+                    while ((System.nanoTime() - start) < this.ballDelay) {
                     }
                     // We only do the move we can to touch the right racket
                 } else if (checkRight) {
                     this.xBall += (this.xRightRacket - this.xBall - this.radius);
-                    this.scoreRight += 10;
+                    this.scoreRight += 1;
+                    changeSpeed();
                     repaint();
                     continueMove(-majX, majY);
                     // We only do the move we can to touch the left racket
                 } else if (checkLeft) {
                     this.xBall -= (this.xBall - this.xLeftRacket - this.widthRect);
-                    this.scoreLeft += 10;
+                    this.scoreLeft += 1;
+                    changeSpeed();
                     repaint();
                     continueMove(-majX, majY);
                     // We only do the move we can to touch the up 
-                    // side of the screen
+                    // side of the window
                 } else if (checkUp) {
                     this.yBall = 0;
                     repaint();
                     continueMove(majX, -majY);
                     // We only do the move we can to touch the down 
-                    // side of the screen
+                    // side of the window
                 } else if (checkDown) {
                     this.yBall = this.height - this.radius;
                     repaint();
