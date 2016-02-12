@@ -84,24 +84,26 @@ public class Canvas extends JPanel {
         return this.yBall + majY + this.radius >= this.height;
     }
 
-//    public void initMove() {
-//        int majX = selectDirection();
-//        int majY = selectDirection();
-//        this.xBall += majX;
-//        this.yBall += majY;
-//        repaint();
-//        long start = System.nanoTime();
-//        while ((System.nanoTime() - start) < 50000000) {
-//        }
-//        this.continueMove(majX, majY);
-//    }
     public void initMove() {
+        int select = selectDirection();
+        int majX = (select == 0) ? select + 1 : select;
+        select = selectDirection();
+        int majY = (select == 0) ? select + 1 : select;
+        this.xBall += majX;
+        this.yBall += majY;
         repaint();
         long start = System.nanoTime();
-        while ((System.nanoTime() - start) < 10000000) {
+        while ((System.nanoTime() - start) < 50000000) {
         }
-        this.continueMove(1, 2);
+        this.continueMove(majX, majY);
     }
+//    public void initMove() {
+//        repaint();
+//        long start = System.nanoTime();
+//        while ((System.nanoTime() - start) < 10000000) {
+//        }
+//        this.continueMove(1, 2);
+//    }
 
 //    public void continueMove(int majX, int majY) {
 //        while (true) {
@@ -129,15 +131,12 @@ public class Canvas extends JPanel {
                 checkUp = checkHitBoxUp(majX, majY);
                 // If we have a collision 
                 if (!checkRight && !checkLeft && !checkUp && !checkDown) {
-                    System.out.println("1");
                     this.xBall += majX;
                     this.yBall += majY;
                     repaint();
                     long start = System.nanoTime();
                     while ((System.nanoTime() - start) < 10000000) {
                     }
-                    
-                    System.out.println("after the while");
                     // We only do the move we can to touch the right racket
                 } else if (checkRight) {
                     this.xBall += (this.xRightRacket - this.xBall - this.radius);
@@ -161,10 +160,8 @@ public class Canvas extends JPanel {
                     repaint();
                     continueMove(majX, -majY);
                 } else {
-                    System.out.println("Else");
                 }
             } else {
-                System.out.println("Loose");
                 this.xBall = -200;
                 this.yBall = -200;
                 repaint();
