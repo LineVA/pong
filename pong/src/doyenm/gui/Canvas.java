@@ -29,6 +29,11 @@ public class Canvas extends JPanel {
     private final int xRightRacket;
     private int yRightRacket;
 
+    private final String playerLeft = "Player 1 : ";
+    private int scoreLeft;
+    private final String playerRight = "Player 2 : ";
+    private int scoreRight;
+
     private final int width = 500;
     private final int height = 500;
 
@@ -43,6 +48,8 @@ public class Canvas extends JPanel {
         this.yLeftRacket = this.height / 2 - this.heightRect / 2;
         this.xRightRacket = this.width - this.widthRect;
         this.yRightRacket = this.height / 2 - this.heightRect / 2;
+        this.scoreLeft = 0;
+        this.scoreRight = 0;
         this.random = new Random();
     }
 
@@ -140,11 +147,13 @@ public class Canvas extends JPanel {
                     // We only do the move we can to touch the right racket
                 } else if (checkRight) {
                     this.xBall += (this.xRightRacket - this.xBall - this.radius);
+                    this.scoreRight += 10;
                     repaint();
                     continueMove(-majX, majY);
                     // We only do the move we can to touch the left racket
                 } else if (checkLeft) {
                     this.xBall -= (this.xBall - this.xLeftRacket - this.widthRect);
+                    this.scoreLeft += 10;
                     repaint();
                     continueMove(-majX, majY);
                     // We only do the move we can to touch the up 
@@ -219,5 +228,9 @@ public class Canvas extends JPanel {
         g.setColor(Color.YELLOW);
         g.fillRoundRect(this.xRightRacket, this.yRightRacket, this.widthRect,
                 this.heightRect, this.roundRect, this.roundRect);
+        g.setColor(Color.BLACK);
+        g.drawString((this.playerLeft + this.scoreLeft), 0, 10);
+        g.drawString((this.playerRight + this.scoreRight), this.width - 100, 10);
+
     }
 }
