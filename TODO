@@ -1,0 +1,24 @@
+Features : 
+	a functionnal pong
+	a system to choose the mode : 2 players, 1 player and the computer
+	a way to change the orientation
+	a option to change the mapping
+	a stop menu
+
+A functionnal pong :
+	2 rackets and a ball : DONE
+	Mapping of the keyboard to move the rackets : DONE
+	The ball can move alone : DONE
+		with physical laws : DONE
+	The move of the ball is not the same according to the portion of the racket
+	The rackets and the ball cannot go out of the screen except for the ballwhen we loose : DONE
+	Responsive
+	The spped accelerates.
+	The ball cannot re-appear : DONE
+	The ball disappears when we loose : Bug on the left side
+	The score evoluates.
+
+The code : 
+	the dimensions are not directly in the code : DONE
+	Afficher la seed 
+ 
